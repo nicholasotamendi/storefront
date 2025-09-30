@@ -1,0 +1,42 @@
+<html><head><meta charset="utf-8"></head><head></head><body>
+
+{% if name %}
+<h1>Hello, {{ name }}! This is your result: {{ result }}</h1>
+{% else %}
+<h1>Hello, Stranger! This is your result: {{ result }}</h1>
+{% endif %}
+
+
+    {% for product in products %}
+    
+    {% endfor %}
+  <table border="1">
+  <thead>
+    <tr>
+      <th>Product Title</th>
+      <th>Product Description</th>
+      <th>Product Price ($)</th>
+        <th>Product Inventory</th>
+        <th>Collection Name</th>
+    </tr>
+  </thead>
+  <tbody><tr>
+      <td>{{ product.title }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.unit_price }}</td>
+      <td>{{ product.inventory }}</td>
+      <td>{{ product.collection.title }}</td>
+    </tr></tbody>
+</table>
+
+
+{{discount}}
+
+
+{{itemset}}
+
+
+
+
+
+</body></html>

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -100,8 +101,9 @@ DATABASES = {
         'NAME': 'storefront1',
         'USER': 'root',
         'PASSWORD': 'Janeson16@x',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
+
     }
 }
 
@@ -182,3 +184,14 @@ EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = 'storefront <noreply@storefront.com>'
 
 ADMINS = [('Admin', 'otamendi1606@gmail.com')]
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1' #url of the broker. Here we are using redis as the broker. Celery can find this setting using the name CELERY_BROKER_URL
+
+CELERY_BEAT_SCHEDULE = {
+    'notify_customers': {
+        'task': 'playground.tasks.notify_customers', #full path to the task
+        'schedule': 5 , #this will run the task every 5 seconds
+        #'schedule': #crontab(hour=8, minute=0), #this will run the task every day at 8am, Crontab is used for more complex schedules
+        'args': ['Good morning! This is your daily reminder to place an order for today.'] #arguments to pass to the task
+    }
+}

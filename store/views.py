@@ -400,8 +400,6 @@ class OrderViewSet(ModelViewSet):
 
 
 
-
-
 #in django signals are used to decouple different parts of the application
 #signals allow certain senders to notify a set of receivers when some action has taken place
 

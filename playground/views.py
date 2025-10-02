@@ -9,6 +9,8 @@ from django.db import transaction, connection
 from django.core.mail import EmailMessage, BadHeaderError
 from templated_mail.mail import BaseEmailMessage
 
+from .tasks import notify_customers
+
 from tags.models import TaggedItems
 
 from store.models import Product, OrderItem, Collection, Customer, Order
@@ -144,7 +146,7 @@ def say_hello(request):
         ' FROM store_product'
     )
     '''
-    #this is how to send email in django 
+    '''    #this is how to send email in django using django core email
     try:
         email = BaseEmailMessage(
             template_name='emails/hello.html',
@@ -153,7 +155,10 @@ def say_hello(request):
         email.send(['recipient@example.com'])
 
     except BadHeaderError:
-        pass
+        pass'''
+        
+    notifications = notify_customers.delay('Hello Customers!') #this will run the task in the background using celery
+
 
     #queryset = Product.objects.only('id','title') - only returns id and title
     #queryset = Product.objects.defer('description') - returns all fields except description

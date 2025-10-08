@@ -1,8 +1,51 @@
-venv/
+# Python
 __pycache__/
-*.pyc
-db.sqlite3
-/staticfiles/
-/media/
-/env
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Django
 *.log
+*.pot
+*.pyc
+*.pyo
+*.mo
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Pytest / Coverage
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+
+# Migrations (optional — if you don't want to commit them)
+# Uncomment below if you only want clean migrations after testing
+# */migrations/
+# !*/migrations/__init__.py
+
+# Node / Frontend builds (if using React or similar)
+node_modules/
+build/
+dist/
+
+# Environment & config
+*.env
+.env.*

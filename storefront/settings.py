@@ -185,8 +185,10 @@ DEFAULT_FROM_EMAIL = 'storefront <noreply@storefront.com>'
 
 ADMINS = [('Admin', 'otamendi1606@gmail.com')]
 
+#celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/1' #url of the broker. Here we are using redis as the broker. Celery can find this setting using the name CELERY_BROKER_URL
 
+#celery beat settings
 CELERY_BEAT_SCHEDULE = {
     'notify_customers': {
         'task': 'playground.tasks.notify_customers', #full path to the task

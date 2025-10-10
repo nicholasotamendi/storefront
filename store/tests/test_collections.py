@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 @pytest.fixture
 def create_collection(api_client):
     def do_create_collection(collection):
-        return api_client.post('/store/collections/', collection)
+        api_client.post('/store/collections/', collection)
     return do_create_collection
 
 
@@ -15,7 +15,7 @@ def create_collection(api_client):
 @pytest.mark.django_db
 class TestCreateCollection:
     #@pytest.mark.skip(reason="Not implemented yet")
-    def test_if_user_is_anonymous_returns_401(self, api_client):
+    def test_if_user_is_anonymous_returns_401(self, api_client, create_collection):
         #AAA (Arrange, Act, Assert)
         #Arrange 
         api_client.logout() #ensures the client is logged out

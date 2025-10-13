@@ -15,7 +15,7 @@ from datetime import timedelta
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'djoser',
+    'silk',
     'playground',
     'debug_toolbar',
     'tags',
@@ -51,17 +52,27 @@ INSTALLED_APPS = [
     'core',
 ]
 
+
+
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+
+#the code below adds the silk middleware only if the debug setting is true
+# silk is used for profiling and monitoring the performance of django applications
+if DEBUG:
+    MIDDLEWARE += ['silk.middleware.SilkyMiddleware']
 
 ROOT_URLCONF = 'storefront.urls'
 
@@ -143,6 +154,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # configuration for media files
 MEDIA_URL = '/media/'
@@ -196,4 +208,47 @@ CELERY_BEAT_SCHEDULE = {
         #'schedule': #crontab(hour=8, minute=0), #this will run the task every day at 8am, Crontab is used for more complex schedules
         'args': ['Good morning! This is your daily reminder to place an order for today.'] #arguments to pass to the task
     }
+}
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2", #database 2 is used for caching because database 1 is used for celery broker
+        "TIMEOUT": 300, #default timeout for cache is 5 minutes
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {  # <-- 1. Corrected typo from "formartters"
+        'verbose': {
+            'format': '{asctime} {levelname} - {name} - {message}',
+            'style': '{',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',  # <-- 3. Added formatter for consistent logs
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',  # <-- 2. Moved 'filename' inside this block
+            'formatter': 'verbose',      # <-- 3. Added formatter for consistent logs
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'file'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+        }
+    },
 }

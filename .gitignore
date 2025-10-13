@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 # Virtual Environment
 .venv/
 venv/
@@ -49,3 +50,5 @@ dist/
 # Environment & config
 *.env
 .env.*
+/static/
+general.log

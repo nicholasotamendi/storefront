@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storefront | Premium E-Commerce API Demo</title>
+    
+    <!-- Link to Bootstrap 5 for fast, robust UI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Custom CSS for Styling Refinement and Branding -->
+    <style>
+        :root {
+            --primary-color: #007bff; /* Primary Blue */
+            --secondary-color: #17a2b8; /* Teal Accent */
+            --dark-color: #212529;
+            --light-bg: #f8f9fa;
+        }
+        body {
+            background-color: #ffffff;
+            color: var(--dark-color);
+            min-height: 100vh;
+        }
+        /* Sticky Navigation */
+        .navbar {
+            background-color: white !important;
+            border-bottom: 1px solid #eee;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--primary-color) !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        .hero-section p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-top: 15px;
+        }
+
+        /* Product Card */
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Deep, soft shadow */
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .product-image-placeholder {
+            height: 200px;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        .product-details {
+            padding: 20px;
+        }
+        .price-tag {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #dc3545; /* Price in Red for attention */
+        }
+        
+        /* Developer Section */
+        .dev-section {
+            background-color: var(--dark-color);
+            color: #f8f9fa;
+            padding: 70px 0;
+            margin-top: 60px;
+            border-radius: 12px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.4);
+        }
+        .dev-section h2 {
+            color: #ffc107; /* Yellow for urgency/attention */
+            font-weight: 800;
+            font-size: 2.5rem;
+        }
+        .btn-api {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            font-size: 1.2rem;
+            padding: 12px 40px;
+            margin-top: 25px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn-api:hover {
+            background-color: #0d8396;
+            border-color: #0d8396;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVIGATION BAR (Sticky) -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'api-home' %}">
+                <span style="font-size: 1.5rem;">💎</span> STOREFRONT API DEMO
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item me-3">
+                        <a class="nav-link active" href="#">Shop All</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link" href="#">Collections</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Link to the Developer section on this same page -->
+                        <a class="nav-link btn btn-sm btn-outline-secondary" href="#developer-hub">Developer Hub</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SECTION -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="animate__animated animate__fadeInDown">
+                Powering the Future of Retail.
+            </h1>
+            <p class="mx-auto" style="max-width: 600px;">
+                Explore our sophisticated product line. Every item, inventory count, and transaction is managed by our robust, high-performance RESTful API.
+            </p>
+            <a href="#" class="btn btn-lg btn-light mt-4 fw-bold shadow-lg">Shop Now →</a>
+        </div>
+    </div>
+
+    <!-- 3. FEATURED PRODUCTS SHOWCASE -->
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold text-secondary">FEATURED INVENTORY</h2>
+        
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            
+            <!-- Product 1: High-Tech -->
+            <div class="col">
+                <div class="card product-card">
+                    <div class="product-image-placeholder">🤖</div>
+                    <div class="product-details">
+                        <h5 class="card-title fw-bold">Quantum Processor Unit</h5>
+                        <p class="card-text text-muted small">Ultra-low latency, next-generation computing power.</p>
+                        <span class="price-tag">$2,499.00</span>
+                        <p class="text-success small mt-1">In Stock: 42 units</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 2: Accessories -->
+            <div class="col">
+                <div class="card product-card">
+                    <div class="product-image-placeholder">🔋</div>
+                    <div class="product-details">
+                        <h5 class="card-title fw-bold">Endurance Power Bank</h5>
+                        <p class="card-text text-muted small">20,000mAh capacity with rapid wireless charging.</p>
+                        <span class="price-tag">$89.99</span>
+                        <p class="text-success small mt-1">In Stock: 180 units</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3: Apparel -->
+            <div class="col">
+                <div class="card product-card">
+                    <div class="product-image-placeholder">👕</div>
+                    <div class="product-details">
+                        <h5 class="card-title fw-bold">Performance Tee</h5>
+                        <p class="card-text text-muted small">Moisture-wicking fabric. Perfect for high activity.</p>
+                        <span class="price-tag">$45.00</span>
+                        <p class="text-success small mt-1">In Stock: 500+ units</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 4: Books/Data -->
+            <div class="col">
+                <div class="card product-card">
+                    <div class="product-image-placeholder">💾</div>
+                    <div class="product-details">
+                        <h5 class="card-title fw-bold">Data Science Handbook</h5>
+                        <p class="card-text text-muted small">The definitive guide to modern data modeling.</p>
+                        <span class="price-tag">$199.99</span>
+                        <p class="text-success small mt-1">In Stock: 75 units</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- 4. CALL TO ACTION / GUARANTEE -->
+    <div class="container my-5">
+        <div class="p-5 bg-light rounded-3 text-center border">
+            <h3 class="fw-bold mb-3">Seamless Experience, Guaranteed.</h3>
+            <p class="lead text-muted">
+                Our foundation is built on reliable infrastructure and cutting-edge technology.
+            </p>
+            <a href="#" class="btn btn-secondary shadow-sm">Explore Collections →</a>
+        </div>
+    </div>
+
+    <!-- 5. DEVELOPER API HUB (High Contrast Section) -->
+    <div class="dev-section" id="developer-hub">
+        <div class="container">
+            <h2 class="mb-3">
+                API Developer Hub
+            </h2>
+            <p class="lead text-light mx-auto" style="max-width: 700px;">
+                You're looking past the facade. Access the underlying architecture that manages every piece of data you see above—from inventory to order processing.
+            </p>
+            
+            <div class="row mt-5 text-center">
+                <div class="col-md-4">
+                    <h3 class="h5 text-warning">Fast & Secure</h3>
+                    <p class="text-muted small">RESTful design, JWT authentication, and optimized endpoints.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="h5 text-warning">MySQL & Redis Backed</h3>
+                    <p class="text-muted small">Robust data storage and low-latency caching for scale.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="h5 text-warning">Full CRUD Support</h3>
+                    <p class="text-muted small">Manipulate Products, Collections, Carts, and Orders.</p>
+                </div>
+            </div>
+            
+            <!-- Link Button to Docs -->
+            <a href="{% url 'api-docs' %}" class="btn btn-api shadow-lg">
+                View Full API Reference
+            </a>
+            <p class="small text-muted mt-3">Base Endpoint: <code>/store/</code></p>
+        </div>
+    </div>
+
+
+    <!-- 6. FOOTER -->
+    <footer class="container-fluid py-4 text-center text-muted small border-top">
+        Storefront API Demo &copy; 2025 | For Educational and Development Use Only.
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

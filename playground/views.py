@@ -8,6 +8,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import transaction, connection
 from django.core.mail import EmailMessage, BadHeaderError
 from templated_mail.mail import BaseEmailMessage
+from django.views.decorators.cache import cache_page
+from rest_framework.views import APIView as apiView
+from django.utils.decorators import method_decorator
+
+from django.core.cache import cache
+
+import requests
 
 from .tasks import notify_customers
 
@@ -15,10 +22,12 @@ from tags.models import TaggedItems
 
 from store.models import Product, OrderItem, Collection, Customer, Order
 
+import logging 
 # Create your views here.
 
 # A view is a request handler (takes a request and returns a response)
 
+logger = logging.getLogger(__name__) 
 
 '''
 def say_hello(request):
@@ -29,7 +38,44 @@ def say_hello(request):
 
 '''
 
+#class based view of say_hello view
+class HelloView(apiView):
+    @method_decorator(cache_page(5 * 60)) #method decorator to cache the view for 5 minutes, method decorators are used to decorate class based views
+    def get(self, request):
+        try: 
+            logger.info('Calling httpbin')
+            response = requests.get('https://httpbin.org/delay/2') #this will make a get request to the url and wait for 2 seconds before returning a response
+            logger.info('Received the response')
+            data = response.json()
+        except request.ConnectionError:
+            logger.critical('httpbin is offline')
+
+        return render(request, 'hello.html', {'name': data})
+    
+
+
+#function based view with caching of say_hello view
+'''
+@cache_page(5 * 60) #cache the view for 5 minutes
 def say_hello(request):
+
+    #Expression wrapper 
+    discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
+    discount = Product.objects.annotate(
+        discounted_price = discounted_price
+    )
+
+    response = requests.get('https://httpbin.org/delay/2') #this will make a get request to the url and wait for 2 seconds before returning a response
+    data = response.json()
+
+    return render(request, 'hello.html',
+                  {'name': data, 
+                   'discount': discount,
+                   })
+'''
+#NB: cache decorators would not work with class based views
+
+
     #queryset = Product.objects.filter(last_update__year=2025)
     # find all products with inventory < 10 and unit price < 20
     #queryset = Product.objects.filter(inventory__lt=10).filter(unit_price__lt=20)
@@ -69,54 +115,49 @@ def say_hello(request):
     #result = Product.objects.aggregate(count = Count('id'), min_price = Min('unit_price'))
 
     #annotate
-    """    
+"""    
     newcust = Customer.objects.annotate(full_name = Func(
         F('first_name'),
         Value(' '),
         F('last_name'),
         function = 'CONCAT'
-    ))"""
+    ))
+"""
 
     #newcust = Customer.objects.annotate(full_name = Concat('first_name', Value(' ') ,'last_name'))
 
     #grouping data 
-    '''counters = Customer.objects.annotate(
-        orders_count = Count('order')
-    )
-    '''
-    #Expression wrapper 
-    discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
-    discount = Product.objects.annotate(
-        discounted_price = discounted_price
-    )
+
 
 
     # this is how to get the tags for a given product
-    '''content_type = ContentType.objects.get_for_model(Product) #this finds content type id for us 
+'''content_type = ContentType.objects.get_for_model(Product) #this finds content type id for us 
     itemset = TaggedItems \
     .objects.select_related('tag') \
     .filter(
         content_type = content_type,
         object_id = 1
-    )'''
+    )
+'''
     #itemset = TaggedItems.objects.get_tags_for(Product, 1)
     
 
     #creating objects - insterting records into the db 
-    '''
+'''
     collection = Collection()
     collection.title = 'Video Games'
     collection.featured_product = Product(pk = 1)
     collection.save()    
-    '''
+'''
 
     #updating the records
     #always get the objects first from the db before updating it (read it first)
-    '''
+'''
     collection = Collection.objects.get(pk = 101)
     collection.title = 'Games'
     collection.featured_product = Product(pk = 2)
-    collection.save()'''
+    collection.save()
+'''
 
     #Collection.objects.filter(pk = 11).update(featured_product=None)
 
@@ -124,7 +165,7 @@ def say_hello(request):
     #Collection.objects.filter(id__gt = 5),delete()
 
     #transactions (atomic way and rollback)
-    '''with transaction.atomic():
+'''with transaction.atomic():
 
         order = Order()
         order.customer_id = 1
@@ -136,17 +177,17 @@ def say_hello(request):
         item.quantity = 25
         item.unit_price = 19
         item.save()'''
-    '''
+'''
     with connection.cursor() as cursor:
         cursor.execute('SELECT id, title' \
         ' FROM store_product')
         cursor.callproc('get_customers', [1,2,3])'''
-    '''Product.objects.raw(
+'''Product.objects.raw(
         'SELECT id, title' \
         ' FROM store_product'
     )
-    '''
-    '''    #this is how to send email in django using django core email
+'''
+'''    #this is how to send email in django using django core email
     try:
         email = BaseEmailMessage(
             template_name='emails/hello.html',
@@ -155,16 +196,30 @@ def say_hello(request):
         email.send(['recipient@example.com'])
 
     except BadHeaderError:
-        pass'''
+        pass
+'''
         
-    notifications = notify_customers.delay('Hello Customers!') #this will run the task in the background using celery
+    #notifications = notify_customers.delay('Hello Customers!') #this will run the task in the background using celery
 
 
     #queryset = Product.objects.only('id','title') - only returns id and title
     #queryset = Product.objects.defer('description') - returns all fields except description
 
-    return render(request, 'hello.html',
-                  {'name': 'Jacinth', 
-                   #'products': queryset, 
-                   'discount': discount,
-                   })
+    #requests.get('https://httpbin.org/delay/2') #this will make a get request to the url and wait for 2 seconds before returning a response
+
+
+    #caching example
+''' key = 'httpbin_result'
+    if cache.get(key) is None: #check if the result is already in the cache
+        response = requests.get('https://httpbin.org/delay/2') #this will make a get request to the url and wait for 2 seconds before returning a response
+        data = response.json()
+        cache.set(key, data) #cache the result for 30 seconds
+'''
+
+
+    #caching example with decorator
+
+'''counters = Customer.objects.annotate(
+        orders_count = Count('order')
+    )
+    '''

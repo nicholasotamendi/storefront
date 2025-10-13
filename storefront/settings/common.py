@@ -66,6 +66,7 @@ MIDDLEWARE = [
 #the code below adds the silk middleware only if the debug setting is true
 # silk is used for profiling and monitoring the performance of django applications
 
+#
 
 ROOT_URLCONF = 'storefront.urls'
 
@@ -93,6 +94,7 @@ TEMPLATES = [
     },
 ]
 
+#trigger new vercel deployment
 WSGI_APPLICATION = 'storefront.wsgi.application'
 
 

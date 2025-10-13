@@ -42,6 +42,7 @@ tzdata = "==2025.2"
 urllib3 = "==2.5.0"
 django-redis = "*"
 whitenoise = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest = "*"

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'silk',
+    'whitenoise.runserver_nostatic',
     'playground',
     'debug_toolbar',
     'tags',

@@ -10,9 +10,10 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 DATABASES = {
     'default': dj_database_url.config(
-    default=os.environ.get('POSTGRES_URL'), 
-    conn_max_age=600, 
-    ssl_require=True)
+        default=os.environ.get('POSTGRES_URL'), 
+        conn_max_age=600, 
+        ssl_require=True
+    )
 }
 
 ALLOWED_HOSTS = [os.environ.get('VERCEL_URL')]

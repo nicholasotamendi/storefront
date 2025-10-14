@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "storefront/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.12" }
+    }
+  ],
   "routes": [
     {
       "src": "/static/(.*)",
@@ -7,7 +14,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "storefront/wsgi.py"
+      "dest": "/storefront/wsgi.py"
     }
   ]
 }

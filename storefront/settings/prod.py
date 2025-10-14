@@ -29,7 +29,8 @@ else:
         }
     }
 
-# Allow both vercel and local
+# Allow both vercel and local#
+#Trigger a new build
 ALLOWED_HOSTS = [
     os.environ.get('VERCEL_URL', '127.0.0.1'),
     '.vercel.app',
